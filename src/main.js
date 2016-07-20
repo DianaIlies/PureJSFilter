@@ -1,5 +1,3 @@
-//helloooooo
-
 const folders =
 {
     type: 'dir',
@@ -58,53 +56,51 @@ const folders =
     ]
 };
 
+// afiseaza ierarhia si in acelasi timp face si search
+// se adauga la string-ul "str" doar directoarele/fisierele care contin string-ul introdus
+// daca se face match pe numele unui director => se apeleaza functia allHierarchy
+// altfel, intr-o bucla for care parcurge fiecare copil avem 2 ramuri
+//          1 - este director => se apeleaza recursiv
+//          2 - este fisier => se adauga la str fisierul
+//
 
 function showHierarchy(myFolders, strIn) {
     var x = document.getElementById("myID");
     var str = "";
 
-
     if (myFolders.name.match(strIn) && myFolders.type === "dir") {
-        str = goodHierarchy(myFolders);
+        str = allHierarchy(myFolders);
     }
     else {
-        if (myFolders.type === "dir" && myFolders.name.match(strIn) !== null)
-            str += "<li class ='folder-item'>" + myFolders.name + "</li>";
-
         for (var j = 0; j < myFolders.children.length; j++) {
-            if (myFolders.children[j].type === "dir" && (myFolders.children[j].name.match(strIn) !== null || strIn === null)) {
-                str+= showHierarchy(myFolders.children[j], strIn);
-            }
-
-            else if (myFolders.children[j].type === "dir") {
+            if (myFolders.children[j].type === "dir") {
                 str += showHierarchy(myFolders.children[j], strIn);
-
             }
             else if (myFolders.children[j].type === "file") {
-                if (myFolders.children[j].name.match(strIn) != null || strIn == null) {
+                if (myFolders.children[j].name.match(strIn) != null) {
                     str += "<li class ='file-item'>" + myFolders.children[j].name + "</li>";
                 }
             }
         }
     }
-    str += "</ul>";
     return x.innerHTML = str;
 }
 
-
-function goodHierarchy(myFolders) {
+// se apeleaza doar cand string-ul cautat se gaseste intr-un folder
+// => trebuie sa se afiseze tot folderul cu tot cu fisierele continute
+// similara cu showHierarchy, dar nu mai verifica string-ul introdus
+function allHierarchy(myFolders) {
     var x = document.getElementById("myID");
     var j = 0;
     var str = "";
 
     str += "<li class ='folder-item'>" + myFolders.name + "</li>";
 
-
     while (j < myFolders.children.length) {
         if (j === 0)
             str += "<ul>";
         if (myFolders.children[j].type === "dir") {
-            str += goodHierarchy(myFolders.children[j]);
+            str += allHierarchy(myFolders.children[j]);
         }
 
 
@@ -118,13 +114,14 @@ function goodHierarchy(myFolders) {
 }
 
 
-showHierarchy(folders);
+showHierarchy(folders, "");
 
 function render(strIn) {
-    var x = document.getElementById("myID");
-    return x.innerHTML =showHierarchy(folders, strIn);
+    var folderContainer = document.getElementById("myID");
+    return folderContainer.innerHTML = showHierarchy(folders, strIn);
 }
 
+// functie pentru afisearea mesajului "Searching for: ..." cand textField-ul de input nu este gol
 function searching() {
     var strOut = "";
     var strIn = document.getElementById("input_id").value;
