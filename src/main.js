@@ -34,6 +34,24 @@ const folders =
                         {
                             type: 'file',
                             name: 'underscore.js'
+                        },
+                        {
+                            type: 'dir',
+                            name: 'diana',
+                            children: [
+                                {
+                                    type: 'file',
+                                    name: 'cat.txt'
+                                },
+                                {
+                                    type: 'file',
+                                    name: 'cat.txt'
+                                },
+                                {
+                                    type: 'file',
+                                    name: 'fluffyCat.js'
+                                }
+                            ]
                         }
                     ]
                 }
@@ -53,6 +71,7 @@ const folders =
                 }
             ]
         }
+
     ]
 };
 
@@ -65,8 +84,9 @@ const folders =
 //
 
 function showHierarchy(myFolders, strIn) {
-    var x = document.getElementById("myID");
+    var folderContainer = document.getElementById("myID");
     var str = "";
+
 
     if (myFolders.name.match(strIn) && myFolders.type === "dir") {
         str = allHierarchy(myFolders);
@@ -83,34 +103,31 @@ function showHierarchy(myFolders, strIn) {
             }
         }
     }
-    return x.innerHTML = str;
+    return folderContainer.innerHTML = str;
 }
 
-// se apeleaza doar cand string-ul cautat se gaseste intr-un folder
+// se apeleaza doar cand string-ul cautat se gaseste in numele unui folder
 // => trebuie sa se afiseze tot folderul cu tot cu fisierele continute
 // similara cu showHierarchy, dar nu mai verifica string-ul introdus
 function allHierarchy(myFolders) {
-    var x = document.getElementById("myID");
-    var j = 0;
+    var folderContainer = document.getElementById("myID");
+
     var str = "";
 
     str += "<li class ='folder-item'>" + myFolders.name + "</li>";
 
-    while (j < myFolders.children.length) {
+    for (var j = 0; j < myFolders.children.length; j++) {
         if (j === 0)
             str += "<ul>";
         if (myFolders.children[j].type === "dir") {
             str += allHierarchy(myFolders.children[j]);
         }
-
-
         else if (myFolders.children[j].type === "file") {
             str += "<li class ='file-item'>" + myFolders.children[j].name + "</li>";
         }
-        j++;
     }
     str += "</ul>";
-    return x.innerHTML = str;
+    return folderContainer.innerHTML = str;
 }
 
 
@@ -134,7 +151,6 @@ function searching() {
         document.getElementById("searching").style.display = "none";
     }
 }
-
 
 function main() {
     var strIn = document.getElementById("input_id").value;
